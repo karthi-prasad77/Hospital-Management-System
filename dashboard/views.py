@@ -145,21 +145,6 @@ def patient_list(request):
 
     return render(request, 'main/patient_list.html', context)
 
-'''
-def autocomplete(request):
-    if patient in request.GET:
-        name = Patient.objects.filter(name__icontains=request.GET.get(patient))
-        name = ['js', 'python']
-        
-        names = list()
-        names.append('Shyren')
-        print(names)
-        for patient_name in name:
-            names.append(patient_name.name)
-        return JsonResponse(names, safe=False)
-    return render (request, 'main/patient_list.html')
-'''
-
 def autosuggest(request):
     query_original = request.GET.get('term')
     queryset = Patient.objects.filter(name__icontains=query_original)
@@ -174,5 +159,3 @@ def autodoctor(request):
     mylist += [x.name for x in queryset]
     return JsonResponse(mylist, safe=False)
 
-def info(request):
-    return render(request, "main/info.html")
