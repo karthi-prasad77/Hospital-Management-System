@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "dashboard",
     "multiselectfield",
-    "django_filters"
+    "django_filters",
+    "rest_framework"
 ]
 
 MIDDLEWARE = [
