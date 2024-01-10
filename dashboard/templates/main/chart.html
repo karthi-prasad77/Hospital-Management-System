@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Report Page</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        .charts-row {
+            display: flex;
+            justify-content: 
+            flex-wrap: wrap; 
+            padding: 20px; 
+        }
+        .chart-container {
+            width: 45%;
+            height: 400px; 
+            border: 2px solid black; 
+            box-sizing: border-box; 
+            margin-bottom: 20px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        canvas {
+            width: 90%;
+            height: 90%;
+        }
+        .title {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .button-container {
+            text-align: center;
+        }
+
+        .download-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .download-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 class="title">Report visualization</h1>
+
+    <div class="charts-row">
+        <div class="chart-container">
+            <canvas id="patientsChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="bedOccupancyChart"></canvas>
+        </div>
+    </div>
+
+    <div class="button-container">
+        <button class="download-button" onclick="downloadCharts()">Download Charts</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        var ctx = document.getElementById('patientsChart').getContext('2d');
+        var dates = {{ dates|safe }};
+        var patientCounts = {{ patient_counts|safe }};
+
+        var patientsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'Patients per Day',
+                    data: patientCounts,
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1, 
+                            precision: 0 
+                        }
+                    }
+                }
+            }
+        });
+
+        var ctx2 = document.getElementById('bedOccupancyChart').getContext('2d');
+
+        fetch('/api/bed-occupancy/')  
+            .then(response => response.json())
+            .then(data => {
+                var occupiedBeds = data.occupied_beds; 
+                var availableBeds = data.total_beds - occupiedBeds;
+
+                var bedOccupancyChart = new Chart(ctx2, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Occupied', 'Available'],
+                        datasets: [{
+                            data: [occupiedBeds, availableBeds],
+                            backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)'], 
+                            borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching bed occupancy data:', error);
+            });
+
+            function downloadCharts() {
+                var canvas1 = document.getElementById('patientsChart');
+                var canvas2 = document.getElementById('bedOccupancyChart');
+                var mergedCanvas = document.createElement('canvas');
+                var ctx = mergedCanvas.getContext('2d');
+    
+                mergedCanvas.width = canvas1.width + canvas2.width;
+                mergedCanvas.height = Math.max(canvas1.height, canvas2.height);
+    
+                ctx.drawImage(canvas1, 0, 0);
+                ctx.drawImage(canvas2, canvas1.width, 0);
+    
+                var downloadLink = document.createElement('a');
+                downloadLink.href = mergedCanvas.toDataURL('image/png');
+                downloadLink.download = 'report-charts.png'; 
+                downloadLink.click();
+            }
+    </script>
+</body>
+</html>

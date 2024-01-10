@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Department Occupancy</title>
+    <style>
+        /* CSS styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Department Occupancy</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Department</th>
+                <th>Occupied Beds</th>
+                <th>Total Beds</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for department, occupancy in department_occupancy.items %}
+                <tr>
+                    <td>{{ department.name }}</td>
+                    <td>{{ occupancy.occupied }}</td>
+                    <td>{{ occupancy.total }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'download_department_report' %}" download>Download Department Report (CSV)</a>
+
+</body>
+</html>

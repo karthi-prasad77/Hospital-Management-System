@@ -68,6 +68,24 @@
                     </select>
                 </div>
 
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="container">
+                        <!-- Other form fields -->
+                        <div class="form-field col-md-6">
+                            <label for="department">Department:</label>
+                            <select class="input-text" name="department" id="department">
+                                <option value="">Select Department</option>
+                                {% for department in departments %}
+                                    <option value="{{ department.id }}">{{ department.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <!-- Remaining form fields -->
+                    </div>
+                    <button class="btn col-lg-4 btn-block mx-auto btn-info mb-4">Add Patient</button>
+                </form>
+
 
             </div>
 

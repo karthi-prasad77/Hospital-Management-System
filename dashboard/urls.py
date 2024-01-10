@@ -11,5 +11,8 @@ urlpatterns = [
     path("patient/<str:pk>", views.patient, name="patient"),
     path("autosuggest/", views.autosuggest, name="autosuggest"),
     path("autodoctor/", views.autodoctor, name="autodoctor"),
-    path("info/", views.info, name="info"),
+    path('chart/', views.chart, name="Chart"),
+    path("api/bed-occupancy/", views.bed_occupancy, name="Bed Occupancy"),
+    path("occupancy/", views.occupancy, name="occupancy"),
+    path('download-department-report/', views.download_department_report, name='download_department_report'),
 ]
