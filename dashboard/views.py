@@ -63,11 +63,12 @@ def add_patient(request):
         patient_relative_name = request.POST['patient_relative_name']
         patient_relative_contact = request.POST['patient_relative_contact']
         address = request.POST['address']
-        department = request.POST['department']
-        symptoms = request.POST['symptoms']
-        prior_ailments = request.POST['prior_ailments']
+        department_id = request.POST['department']  # Assuming 'department' is the department ID
+        
+        # Get department instance
+        department = Departments.objects.get(pk=department_id)
         bed_num_sent = request.POST['bed_num']
-        bed_num = Bed.objects.get(bed_number=bed_num_sent)
+        bed_num = Bed.objects.get(bed_Number=bed_num_sent)
         dob = request.POST['dob']
         status = request.POST['status']
         doctor = request.POST['doctor']
@@ -75,21 +76,19 @@ def add_patient(request):
         print(request.POST)
         patient = Patient.objects.create(
             name = name,
-        phone_num = phone_num,
+        phone_number = phone_num,
         patient_relative_name = patient_relative_name,
         patient_relative_contact = patient_relative_contact, 
         address = address,
-        department = department, 
-        symptoms = symptoms, 
-        prior_ailments = prior_ailments, 
-        bed_num = bed_num,
+        department = department,
+        bed = bed_num,
         dob = dob, 
         doctor=doctor,
         status = status
         )
         patient.save()
 
-        bed = Bed.objects.get(bed_number=bed_num_sent)
+        bed = Bed.objects.get(bed_Number=bed_num_sent)
         bed.occupied = True
         bed.save()
         id = patient.id

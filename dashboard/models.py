@@ -37,8 +37,6 @@ class Patient(models.Model):
     patient_relative_contact = models.CharField(max_length=15, null=True)
     address = models.TextField()
     department = models.ForeignKey(Departments, on_delete=models.CASCADE, null=True)
-    symptoms = MultiSelectField(choices=SYMPTOMS, max_choices=2, null=True)
-    prior_ailnments = models.TextField()
     bed = models.OneToOneField(Bed, on_delete=models.SET_NULL, null=True, blank=True)
     dob = models.DateField(null=True)
     doctor = models.ForeignKey("Doctor", on_delete=models.CASCADE, null=True)
